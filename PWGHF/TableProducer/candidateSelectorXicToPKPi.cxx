@@ -63,14 +63,14 @@ struct HfCandidateSelectorXicToPKPi {
   Configurable<std::vector<std::string>> namesInputFeatures{"namesInputFeatures", std::vector<std::string>{"feature1", "feature2"}, "Names of ML model input features"};
   // CCDB configuration
   Configurable<std::string> ccdbUrl{"ccdbUrl", "http://alice-ccdb.cern.ch", "url of the ccdb repository"};
-   Configurable<std::vector<std::string>> modelPathsCCDB{"modelPathsCCDB", std::vector<std::string>{"EventFiltering/PWGHF/BDTXic"}, "Paths of models on CCDB"};
+  Configurable<std::vector<std::string>> modelPathsCCDB{"modelPathsCCDB", std::vector<std::string>{"EventFiltering/PWGHF/BDTXic"}, "Paths of models on CCDB"};
   Configurable<std::vector<std::string>> onnxFileNames{"onnxFileNames", std::vector<std::string>{"ModelHandler_onnx_XicToPKPi.onnx"}, "ONNX file names for each pT bin (if not from    CCDB full path)"};
   Configurable<int64_t> timestampCCDB{"timestampCCDB", -1, "timestamp of the ONNX file for ML model used to query in CCDB"};
   Configurable<bool> loadModelsFromCCDB{"loadModelsFromCCDB", false, "Flag to enable or disable the loading of models from CCDB"};
 
   o2::analysis::HfMlResponseXicToPKPi<float> hfMlResponse;
-  std::vector<float> outputMlXicToPKPi ={};
-  std::vector<float> outputMlXicToPiKP ={};
+  std::vector<float> outputMlXicToPKPi = {};
+  std::vector<float> outputMlXicToPiKP = {};
   o2::ccdb::CcdbApi ccdbApi;
   TrackSelectorPi selectorPion;
   TrackSelectorKa selectorKaon;
@@ -78,7 +78,6 @@ struct HfCandidateSelectorXicToPKPi {
   HfHelper hfHelper;
 
   using TracksSel = soa::Join<aod::Tracks, aod::TracksPidPi, aod::TracksPidKa, aod::TracksPidPr>;
-
 
   void init(InitContext const&)
   {
@@ -91,7 +90,7 @@ struct HfCandidateSelectorXicToPKPi {
     selectorKaon = selectorPion;
     selectorProton = selectorPion;
 
-  if (applyMl) {
+    if (applyMl) {
       hfMlResponse.configure(binsPtMl, cutsMl, cutDirMl, nClassesMl);
       if (loadModelsFromCCDB) {
         ccdbApi.init(ccdbUrl);
@@ -212,9 +211,9 @@ struct HfCandidateSelectorXicToPKPi {
       outputMlXicToPiKP.clear();
 
       if (!TESTBIT(candidate.hfflag(), aod::hf_cand_3prong::DecayType::XicToPKPi)) {
-        hfSelXicToPKPiCandidate(statusXicToPKPi,statusXicToPiKP);
+        hfSelXicToPKPiCandidate(statusXicToPKPi, statusXicToPiKP);
         if (applyMl) {
-            hfMlXicToPKPiCandidate(outputMlXicToPKPi, outputMlXicToPiKP);
+          hfMlXicToPKPiCandidate(outputMlXicToPKPi, outputMlXicToPiKP);
         }
         continue;
       }
@@ -246,13 +245,12 @@ struct HfCandidateSelectorXicToPKPi {
       if (!topolXicToPKPi && !topolXicToPiKP) {
         hfSelXicToPKPiCandidate(statusXicToPKPi, statusXicToPiKP);
         if (applyMl) {
-            hfMlXicToPKPiCandidate(outputMlXicToPKPi, outputMlXicToPiKP);
+          hfMlXicToPKPiCandidate(outputMlXicToPKPi, outputMlXicToPiKP);
         }
         continue;
       }
       SETBIT(statusXicToPKPi, aod::SelectionStep::RecoTopol);
       SETBIT(statusXicToPiKP, aod::SelectionStep::RecoTopol);
-
 
       auto pidXicToPKPi = -1;
       auto pidXicToPiKP = -1;
@@ -292,7 +290,7 @@ struct HfCandidateSelectorXicToPKPi {
       if (pidXicToPKPi == 0 && pidXicToPiKP == 0) {
         hfSelXicToPKPiCandidate(statusXicToPKPi, statusXicToPiKP);
         if (applyMl) {
-            hfMlXicToPKPiCandidate(outputMlXicToPKPi, outputMlXicToPiKP);
+          hfMlXicToPKPiCandidate(outputMlXicToPKPi, outputMlXicToPiKP);
         }
         continue;
       }
@@ -302,38 +300,38 @@ struct HfCandidateSelectorXicToPKPi {
       if ((pidXicToPiKP == -1 || pidXicToPiKP == 1) && topolXicToPiKP) {
         statusXicToPiKP = 1; // identified as Xic->piKp
       }
-      SETBIT(statusXicToPKPi, aod::SelectionStep::RecoPID); 
-      SETBIT(statusXicToPiKP, aod::SelectionStep::RecoPID); 
+      SETBIT(statusXicToPKPi, aod::SelectionStep::RecoPID);
+      SETBIT(statusXicToPiKP, aod::SelectionStep::RecoPID);
 
       if (applyMl) {
         // ML selections
         bool isSelectedMlXicToPKPi = false;
         bool isSelectedMlXicToPiKP = false;
 
-        if(statusXicToPKPi > 0) {
-        std::vector<float> inputFeaturesXicToPKPi = hfMlResponse.getInputFeatures(candidate, trackPos1, trackNeg, trackPos2);
-        isSelectedMlXicToPKPi = hfMlResponse.isSelectedMl(inputFeaturesXicToPKPi, ptCand, outputMlXicToPKPi);
+        if (statusXicToPKPi > 0) {
+          std::vector<float> inputFeaturesXicToPKPi = hfMlResponse.getInputFeatures(candidate, trackPos1, trackNeg, trackPos2);
+          isSelectedMlXicToPKPi = hfMlResponse.isSelectedMl(inputFeaturesXicToPKPi, ptCand, outputMlXicToPKPi);
         }
         if (statusXicToPiKP > 0) {
-        std::vector<float> inputFeaturesXicToPiKP = hfMlResponse.getInputFeatures(candidate, trackPos1, trackNeg, trackPos2);
-        isSelectedMlXicToPiKP = hfMlResponse.isSelectedMl(inputFeaturesXicToPiKP, ptCand, outputMlXicToPiKP);
+          std::vector<float> inputFeaturesXicToPiKP = hfMlResponse.getInputFeatures(candidate, trackPos1, trackNeg, trackPos2);
+          isSelectedMlXicToPiKP = hfMlResponse.isSelectedMl(inputFeaturesXicToPiKP, ptCand, outputMlXicToPiKP);
         }
 
         if (!isSelectedMlXicToPKPi) {
-            statusXicToPKPi = 0;
+          statusXicToPKPi = 0;
         }
-        if(!isSelectedMlXicToPiKP)  {
-            statusXicToPiKP = 0;
+        if (!isSelectedMlXicToPiKP) {
+          statusXicToPiKP = 0;
         }
-          hfMlXicToPKPiCandidate(outputMlXicToPKPi,outputMlXicToPiKP);
+        hfMlXicToPKPiCandidate(outputMlXicToPKPi, outputMlXicToPiKP);
 
-        SETBIT(statusXicToPKPi, aod::SelectionStep::RecoMl); 
-        SETBIT(statusXicToPKPi, aod::SelectionStep::RecoMl); 
+        SETBIT(statusXicToPKPi, aod::SelectionStep::RecoMl);
+        SETBIT(statusXicToPKPi, aod::SelectionStep::RecoMl);
       }
 
       hfSelXicToPKPiCandidate(statusXicToPKPi, statusXicToPiKP);
-     }
-   }
+    }
+  }
 };
 
 WorkflowSpec defineDataProcessing(ConfigContext const& cfgc)
