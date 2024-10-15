@@ -751,7 +751,7 @@ DECLARE_SOA_TABLE(HfMcGenRedResos, "AOD", "HFMCGENREDRESO", //! Generation-level
                   o2::soa::Marker<1>);
 
 DECLARE_SOA_TABLE(HfCandChaResTr, "AOD", "HFCANDCHARESTR", //! Table with Resonance candidate information for resonances plus tracks reduced workflow
-                  // Indices
+                                                           // Indices
                   hf_track_index_reduced::HfRedCollisionId,
                   // Static
                   hf_cand::PxProng0, hf_cand::PyProng0, hf_cand::PzProng0,
@@ -759,8 +759,7 @@ DECLARE_SOA_TABLE(HfCandChaResTr, "AOD", "HFCANDCHARESTR", //! Table with Resona
                   hf_reso_cand_reduced::InvMass,
                   hf_reso_cand_reduced::InvMassProng0,
                   // Dynamic
-                  hf_reso_cand_reduced::PtProng0<hf_cand::PxProng0, hf_cand::PyProng0>
-                  );
+                  hf_reso_cand_reduced::PtProng0<hf_cand::PxProng0, hf_cand::PyProng0>);
 } // namespace aod
 
 namespace soa
