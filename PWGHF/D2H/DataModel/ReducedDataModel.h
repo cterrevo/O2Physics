@@ -760,8 +760,7 @@ DECLARE_SOA_TABLE(HfCandChaResTr, "AOD", "HFCANDCHARESTR", //! Table with Resona
                   hf_reso_cand_reduced::InvMass,
                   hf_reso_cand_reduced::InvMassProng0,
                   // Dynamic
-                  hf_reso_cand_reduced::PtProng0<hf_cand::PxProng0, hf_cand::PyProng0>
-                  );
+                  hf_reso_cand_reduced::PtProng0<hf_cand::PxProng0, hf_cand::PyProng0>);
 } // namespace aod
 
 namespace soa
